@@ -7,9 +7,7 @@ export default function Home() {
       <nav className="fixed top-0 w-full border-b border-white/10 bg-[#0A0A0A]/80 backdrop-blur-md z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-black">
-              V
-            </div>
+            <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="text-xl font-semibold tracking-tight">Vendevo</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-gray-400">
@@ -60,9 +58,7 @@ export default function Home() {
           <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl blur opacity-20"></div>
           <div className="relative bg-[#111111] border border-white/10 rounded-2xl p-4 shadow-2xl">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
-              <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold">
-                V
-              </div>
+              <img src="/logo.png" alt="Vendevo" className="w-10 h-10 rounded-full object-cover" />
               <div>
                 <p className="font-medium text-sm">Vendedor Vendevo</p>
                 <p className="text-xs text-emerald-400">Online agora</p>
@@ -171,9 +167,7 @@ export default function Home() {
       <footer className="border-t border-white/10 py-12 bg-[#0A0A0A]">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded bg-emerald-500 flex items-center justify-center font-bold text-black text-xs">
-              V
-            </div>
+            <img src="/logo.png" alt="Vendevo" className="w-6 h-6 rounded object-cover" />
             <span className="font-semibold text-sm">Vendevo</span>
           </div>
           <p className="text-sm text-gray-500">© 2026 Vendevo. Todos os direitos reservados.</p>
