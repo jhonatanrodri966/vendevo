@@ -21,33 +21,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Este e-mail já está em uso." }, { status: 400 });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const pending = await prisma.pendingUser.findUnique({ where: { email } });
+    if (pending) {
+      return NextResponse.json({ error: "Já enviamos um código para este e-mail. Verifique sua caixa de entrada." }, { status: 429 });
+    }
 
-    const user = await prisma.user.create({
+    const passwordHash = await bcrypt.hash(password, 10);
+    const code = randomBytes(3).toString("hex").toUpperCase();
+    const codeHash = createHash("sha256").update(code).digest("hex");
+
+    await prisma.pendingUser.create({
       data: {
         name,
         email,
         passwordHash,
-        emailVerified: false,
-      },
-    });
-
-    const code = randomBytes(3).toString("hex").toUpperCase();
-    const codeHash = createHash("sha256").update(code).digest("hex");
-
-    await prisma.emailVerificationCode.create({
-      data: {
-        userId: user.id,
-        email,
         codeHash,
         expiresAt: new Date(Date.now() + 10 * 60000),
       },
     });
 
     const emailSent = await sendVerificationEmail(email, code);
-
     if (!emailSent) {
-      return NextResponse.json({ error: "Erro ao enviar e-mail de verificação." }, { status: 500 });
+      return NextResponse.json({ error: "Erro ao enviar e-mail. Verifique o endereço." }, { status: 500 });
     }
 
     return NextResponse.json({ success: true }, { status: 201 });

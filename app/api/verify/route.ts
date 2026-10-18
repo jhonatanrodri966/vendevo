@@ -14,35 +14,37 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return NextResponse.json({ error: "Usuário não encontrado." }, { status: 404 });
-
-    const record = await prisma.emailVerificationCode.findFirst({
-      where: { userId: user.id, usedAt: null, expiresAt: { gt: new Date() } },
-      orderBy: { createdAt: "desc" },
-    });
-
-    if (!record) {
-      return NextResponse.json({ error: "Código expirado. Solicite um novo." }, { status: 400 });
+    const pending = await prisma.pendingUser.findUnique({ where: { email } });
+    if (!pending) {
+      return NextResponse.json({ error: "Nenhum cadastro pendente para este e-mail." }, { status: 404 });
     }
 
-    if (record.attempts >= 5) {
+    if (pending.attempts >= 5) {
       return NextResponse.json({ error: "Muitas tentativas. Solicite um novo código." }, { status: 429 });
     }
 
     const inputHash = createHash("sha256").update(code).digest("hex");
-    const valid = record.codeHash === inputHash;
+    const valid = pending.codeHash === inputHash;
 
-    await prisma.emailVerificationCode.update({
-      where: { id: record.id },
-      data: { attempts: record.attempts + 1, ...(valid ? { usedAt: new Date() } : {}) },
+    await prisma.pendingUser.update({
+      where: { id: pending.id },
+      data: { attempts: pending.attempts + 1 },
     });
 
     if (!valid) {
       return NextResponse.json({ error: "Código inválido." }, { status: 401 });
     }
 
-    await prisma.user.update({ where: { id: user.id }, data: { emailVerified: true } });
+    await prisma.user.create({
+      data: {
+        name: pending.name,
+        email: pending.email,
+        passwordHash: pending.passwordHash,
+        emailVerified: true,
+      },
+    });
+
+    await prisma.pendingUser.delete({ where: { id: pending.id } });
 
     return NextResponse.json({ success: true });
   } catch (error) {
