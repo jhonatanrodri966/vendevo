@@ -138,3 +138,14 @@ model UsageRecord {
   @@unique([userId, month])
   @@map("usage_records")
 }
+
+model PendingUser {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  codeHash     String
+  expiresAt    DateTime
+  attempts     Int      @default(0)
+  createdAt    DateTime @default(now())
+}
