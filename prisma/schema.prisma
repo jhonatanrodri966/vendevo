@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  verificationCodes EmailVerificationCode[]
+  agentConfig       AgentConfig?
+  products          Product[]
+  conversations     Conversation[]
+  subscription      Subscription?
+  usageRecords      UsageRecord[]
+
+  @@map("users")
+}
+
+model EmailVerificationCode {
+  id        String   @id @default(cuid())
+  userId    String
+  email     String
+  codeHash  String
+  expiresAt DateTime
+  usedAt    DateTime?
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expiresAt])
+  @@map("email_verification_codes")
+}
+
+model AgentConfig {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  agentName      String   @default("Vendedor Vendevo")
+  companyName    String?
+  segment        String?
+  tone           String   @default("profissional e amigável")
+  personality    String?
+  paymentMethods String[]
+  shippingPolicy String?
+  returnPolicy   String?
+  isActive       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("agent_configs")
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  userId       String
+  name         String
+  description  String?
+  priceCents   Int
+  category     String?
+  stock        Int?
+  images       String[]
+  isAvailable  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isAvailable])
+  @@map("products")
+}
+
+model Conversation {
+  id              String   @id @default(cuid())
+  userId          String
+  whatsappPhone   String
+  lastMessageAt   DateTime @default(now())
+  isSimulation    Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@index([userId, lastMessageAt])
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  direction      String
+  content        String
+  tokensUsed     Int?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model Subscription {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  status                String   @default("PENDING")
+  pagarmeSubscriptionId String?  @unique
+  currentPeriodStart    DateTime?
+  currentPeriodEnd      DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model UsageRecord {
+  id               String   @id @default(cuid())
+  userId           String
+  month            String
+  messagesSent     Int      @default(0)
+  overageMessages  Int      @default(0)
+  aiTokensUsed     Int      @default(0)
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month])
+  @@map("usage_records")
+}
