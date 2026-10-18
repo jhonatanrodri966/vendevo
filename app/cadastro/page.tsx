@@ -25,8 +25,8 @@ export default function Cadastro() {
       const data = await res.json();
       
       if (res.ok) {
-        alert("Conta criada com sucesso! Faça login.");
-        router.push("/login");
+        alert("Conta criada! Verifique seu e-mail para ativar.");
+        router.push(`/verificar?email=${encodeURIComponent(email)}`);
       } else {
         alert(data.error || "Erro ao criar conta.");
       }
