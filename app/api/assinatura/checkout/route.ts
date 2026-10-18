@@ -20,20 +20,55 @@ export async function POST() {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
-    // Se não tiver chave do Pagar.me, retorna aviso
-    if (!process.env.PAGARME_SECRET_KEY) {
-      return NextResponse.json({ 
-        error: "Pagamentos ainda não configurados. Configure PAGARME_SECRET_KEY no servidor." 
-      }, { status: 500 });
+    const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+    if (!accessToken) {
+      return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // Aqui seria a chamada real pro Pagar.me
-    // Por enquanto, retorna um aviso
-    return NextResponse.json({ 
-      error: "Integração com Pagar.me em configuração. Em breve disponível." 
-    }, { status: 500 });
+    // Cria a assinatura no Mercado Pago (preapproval)
+    const response = await fetch("https://api.mercadopago.com/preapproval", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reason: "Assinatura Vendevo",
+        auto_recurring: {
+          frequency: 1,
+          frequency_type: "months",
+          transaction_amount: 39.90,
+          currency_id: "BRL",
+        },
+        back_url: "https://vendevo.vercel.app/dashboard/assinatura",
+        payer_email: user.email,
+      }),
+    });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Mercado Pago error:", data);
+      return NextResponse.json({ error: "Erro ao criar assinatura no Mercado Pago." }, { status: 500 });
+    }
+
+    // Salva o ID da assinatura no banco (opcional, mas recomendado)
+    await prisma.subscription.upsert({
+      where: { userId },
+      create: {
+        userId,
+        status: "PENDING",
+        pagarmeSubscriptionId: data.id,
+      },
+      update: {
+        status: "PENDING",
+        pagarmeSubscriptionId: data.id,
+      },
+    });
+
+    return NextResponse.json({ url: data.init_point });
   } catch (error) {
-    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: "Erro interno." }, { status: 500 });
   }
 }
