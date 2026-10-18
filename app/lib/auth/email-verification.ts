@@ -1,6 +1,5 @@
-import { generateRandomString, alphabet, Argon2id } from "oslo/crypto";
-import { TimeSpan, createDate } from "oslo";
-import { prisma } from "@/lib/prisma";
+import { randomBytes, createHash } from "crypto";
+import { prisma } from "@/app/lib/prisma";
 
 const CODE_TTL_MINUTES = 10;
 const MAX_ATTEMPTS = 5;
@@ -11,15 +10,15 @@ export async function createVerificationCode(userId: string, email: string) {
     data: { usedAt: new Date() },
   });
 
-  const code = generateRandomString(6, alphabet("0-9"));
-  const codeHash = await new Argon2id().hash(code);
+  const code = randomBytes(3).toString("hex").toUpperCase();
+  const codeHash = createHash("sha256").update(code).digest("hex");
 
   await prisma.emailVerificationCode.create({
     data: {
       userId,
       email,
       codeHash,
-      expiresAt: createDate(new TimeSpan(CODE_TTL_MINUTES, "m")),
+      expiresAt: new Date(Date.now() + CODE_TTL_MINUTES * 60000),
     },
   });
 
@@ -41,7 +40,8 @@ export async function verifyCode(userId: string, inputCode: string): Promise<boo
     return false;
   }
 
-  const valid = await new Argon2id().verify(record.codeHash, inputCode);
+  const inputHash = createHash("sha256").update(inputCode).digest("hex");
+  const valid = record.codeHash === inputHash;
 
   await prisma.emailVerificationCode.update({
     where: { id: record.id },
