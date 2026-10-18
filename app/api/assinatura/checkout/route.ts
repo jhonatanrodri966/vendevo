@@ -25,7 +25,6 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // Cria a assinatura no Mercado Pago (preapproval)
     const response = await fetch("https://api.mercadopago.com/preapproval", {
       method: "POST",
       headers: {
@@ -42,6 +41,7 @@ export async function POST() {
         },
         back_url: "https://vendevo.vercel.app/dashboard/assinatura",
         payer_email: user.email,
+        status: "pending",
       }),
     });
 
@@ -52,7 +52,6 @@ export async function POST() {
       return NextResponse.json({ error: "Erro ao criar assinatura no Mercado Pago." }, { status: 500 });
     }
 
-    // Salva o ID da assinatura no banco (opcional, mas recomendado)
     await prisma.subscription.upsert({
       where: { userId },
       create: {
