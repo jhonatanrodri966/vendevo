@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-64 border-r border-white/10 bg-[#0F0F0F] flex flex-col fixed h-full z-10">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-black">V</div>
+            <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="text-lg font-semibold">Vendevo</span>
           </Link>
         </div>
