@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     const userId = payload.userId as string;
 
-    const { name, description, priceCents, stock } = await req.json();
+    const { name, description, priceCents, stock, imageUrl } = await req.json();
 
     if (!name || !priceCents) {
       return NextResponse.json({ error: "Nome e preço são obrigatórios." }, { status: 400 });
@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
         description,
         priceCents,
         stock: stock || 0,
+        imageUrl: imageUrl || null,
       },
     });
 
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erro interno." }, { status: 500 });
   }
 }
+
 export async function GET() {
   try {
     const cookieStore = await cookies();
