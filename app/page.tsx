@@ -2,7 +2,10 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans selection:bg-emerald-500/30 relative overflow-hidden">
+      {/* Grid de fundo */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none"></div>
+
       {/* Navbar */}
       <nav className="fixed top-0 w-full border-b border-white/10 bg-[#0A0A0A]/80 backdrop-blur-md z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -27,34 +30,38 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <main className="pt-32 pb-20 px-6">
+      <main className="pt-32 pb-20 px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-8 animate-fade-in-up">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             Seu vendedor de IA, 24 horas por dia.
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1]">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.1] animate-fade-in-up delay-100">
             Venda pelo WhatsApp <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">
               no automático.
             </span>
           </h1>
           
-          <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200">
             A Vendevo configura um vendedor de inteligência artificial para o seu negócio. Ele atende seus clientes, apresenta seus produtos e fecha vendas enquanto você dorme.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/cadastro" className="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-black font-semibold rounded-xl hover:bg-emerald-400 transition-colors text-lg">
-              Começar agora
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
+            <Link 
+              href="/cadastro" 
+              className="relative w-full sm:w-auto px-8 py-4 bg-emerald-500 text-black font-semibold rounded-xl hover:bg-emerald-400 transition-all duration-300 text-lg overflow-hidden group"
+            >
+              <span className="relative z-10">Começar agora</span>
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
             </Link>
             <p className="text-sm text-gray-500 sm:ml-4">R$ 39,90/mês. Cancele quando quiser.</p>
           </div>
         </div>
 
         {/* Fake Chat Demo */}
-        <div className="max-w-md mx-auto mt-20 relative">
+        <div className="max-w-md mx-auto mt-20 relative animate-fade-in-up delay-300">
           <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl blur opacity-20"></div>
           <div className="relative bg-[#111111] border border-white/10 rounded-2xl p-4 shadow-2xl">
             <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-4">
@@ -82,7 +89,7 @@ export default function Home() {
       </main>
 
       {/* Features Grid */}
-      <section id="funcionalidades" className="py-24 bg-[#0F0F0F] border-t border-white/5">
+      <section id="funcionalidades" className="py-24 bg-[#0F0F0F] border-t border-white/5 relative z-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que seu negócio precisa</h2>
@@ -90,7 +97,7 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 hover:border-white/10 transition-colors">
+            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-white/10">
               <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
               </div>
@@ -98,7 +105,7 @@ export default function Home() {
               <p className="text-sm text-gray-400">A IA conversa de forma natural, entende o contexto e responde dúvidas frequentes sem parecer um robô engessado.</p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 hover:border-white/10 transition-colors">
+            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-white/10">
               <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
               </div>
@@ -106,7 +113,7 @@ export default function Home() {
               <p className="text-sm text-gray-400">A IA conhece seus produtos, estoques e preços. Ela apresenta as opções e conduz o cliente até o fechamento da compra.</p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 hover:border-white/10 transition-colors">
+            <div className="p-6 rounded-2xl bg-[#141414] border border-white/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 hover:border-white/10">
               <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
               </div>
@@ -118,7 +125,7 @@ export default function Home() {
       </section>
 
       {/* Como Funciona */}
-      <section id="como-funciona" className="py-24 bg-[#0A0A0A] border-t border-white/5">
+      <section id="como-funciona" className="py-24 bg-[#0A0A0A] border-t border-white/5 relative z-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Como funciona</h2>
@@ -146,7 +153,7 @@ export default function Home() {
       </section>
 
       {/* Pricing */}
-      <section id="precos" className="py-24 bg-[#0A0A0A]">
+      <section id="precos" className="py-24 bg-[#0A0A0A] relative z-10">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Um plano simples e justo</h2>
@@ -189,7 +196,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 bg-[#0F0F0F] border-t border-white/5">
+      <section className="py-24 bg-[#0F0F0F] border-t border-white/5 relative z-10">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Perguntas frequentes</h2>
@@ -218,7 +225,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-12 bg-[#0A0A0A]">
+      <footer className="border-t border-white/10 py-12 bg-[#0A0A0A] relative z-10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <img src="/logo.png" alt="Vendevo" className="w-6 h-6 rounded object-cover" />
