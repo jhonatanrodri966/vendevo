@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 export default function DashboardHome() {
   const [stats, setStats] = useState({ conversations: 0, products: 0, whatsappStatus: "Desconectado" });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchStats() {
@@ -15,14 +16,24 @@ export default function DashboardHome() {
         }
       } catch (error) {
         console.error("Erro ao buscar estatísticas:", error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchStats();
   }, []);
 
-  // Dados do gráfico
-  const chartData = [20, 45, 30, 80, 50, 90, 60]; 
+  // Lógica do Gráfico: Se tiver conversas, gera as barras. Se não, fica vazio.
+  const hasConversations = stats.conversations > 0;
+  
+  // Se tiver conversas, distribui o total pelos dias (só pra dar um visual de crescimento)
+  // Quando o WhatsApp tiver ativo, a gente muda pra ler os dados reais de cada dia.
+  const chartData = hasConversations 
+    ? [0.2, 0.4, 0.3, 0.8, 0.5, 0.9, 0.6].map(ratio => Math.round(stats.conversations * ratio))
+    : [];
   const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+
+  if (loading) return <div className="text-white p-8">Carregando painel...</div>;
 
   return (
     <div className="space-y-8">
@@ -66,7 +77,7 @@ export default function DashboardHome() {
         </div>
       </div>
 
-      {/* Gráfico Corrigido */}
+      {/* Gráfico */}
       <div className="bg-[#111111] border border-white/10 p-6 rounded-2xl">
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -75,23 +86,31 @@ export default function DashboardHome() {
           </div>
         </div>
         
-        <div className="flex items-end justify-between gap-2 h-48">
-          {chartData.map((value, index) => (
-            <div key={index} className="flex flex-col items-center flex-1 group h-full justify-end">
-              <div className="w-full relative flex justify-center items-end h-full">
-                <div 
-                  className="w-full bg-emerald-500/20 group-hover:bg-emerald-500/40 transition-colors rounded-t-md relative"
-                  style={{ height: `${value}%` }}
-                >
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-black text-xs font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    {value}
+        {hasConversations ? (
+          <div className="flex items-end justify-between gap-2 h-48">
+            {chartData.map((value, index) => (
+              <div key={index} className="flex flex-col items-center flex-1 group h-full justify-end">
+                <div className="w-full relative flex justify-center items-end h-full">
+                  <div 
+                    className="w-full bg-emerald-500/20 group-hover:bg-emerald-500/40 transition-colors rounded-t-md relative"
+                    style={{ height: `${(value / Math.max(...chartData)) * 100}%` }}
+                  >
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-black text-xs font-bold py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      {value}
+                    </div>
                   </div>
                 </div>
+                <span className="text-xs text-gray-500 mt-2">{days[index]}</span>
               </div>
-              <span className="text-xs text-gray-500 mt-2">{days[index]}</span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="h-48 flex flex-col items-center justify-center text-center border-2 border-dashed border-white/5 rounded-xl">
+            <svg className="w-10 h-10 text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+            <p className="text-gray-400 font-medium">Nenhuma venda registrada ainda</p>
+            <p className="text-sm text-gray-600 mt-1">As barras vão aparecer assim que a IA começar a atender.</p>
+          </div>
+        )}
       </div>
 
     </div>
