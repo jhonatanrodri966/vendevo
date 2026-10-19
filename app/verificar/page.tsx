@@ -74,7 +74,7 @@ export default function Home() {
             <div className="space-y-4">
               <div className="flex gap-2">
                 <img 
-                  src="https://i.pravatar.cc/100?img=11" 
+                  src="/cliente.png" 
                   alt="Cliente" 
                   className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
                 />
