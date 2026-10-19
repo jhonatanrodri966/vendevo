@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </aside>
 
       <main className="flex-1 ml-64 p-8">
-        <div className="max-w-5xl mx-auto">
+        <div key={pathname} className="max-w-5xl mx-auto animate-page-transition">
           {children}
         </div>
       </main>
