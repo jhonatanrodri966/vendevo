@@ -246,8 +246,8 @@ export default function Home() {
           </div>
           <p className="text-sm text-gray-500">© 2026 Vendevo. Todos os direitos reservados.</p>
           <div className="flex gap-6 text-sm text-gray-400">
-            <a href="#" className="hover:text-white">Termos de uso</a>
-            <a href="#" className="hover:text-white">Privacidade</a>
+            <Link href="/termos" className="hover:text-white">Termos de uso</Link>
+            <Link href="/privacidade" className="hover:text-white">Privacidade</Link>
           </div>
         </div>
       </footer>
