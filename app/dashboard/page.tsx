@@ -7,7 +7,6 @@ export default function DashboardHome() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Card 1 */}
         <div className="bg-[#111111] border border-white/10 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-gray-400">Conversas atendidas</p>
@@ -19,7 +18,6 @@ export default function DashboardHome() {
           <p className="text-xs text-gray-500 mt-2">Nenhuma conversa ainda</p>
         </div>
 
-        {/* Card 2 */}
         <div className="bg-[#111111] border border-white/10 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-gray-400">Produtos cadastrados</p>
@@ -31,7 +29,6 @@ export default function DashboardHome() {
           <p className="text-xs text-gray-500 mt-2">Adicione seu primeiro produto</p>
         </div>
 
-        {/* Card 3 */}
         <div className="bg-[#111111] border border-white/10 p-6 rounded-2xl">
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm font-medium text-gray-400">Status do WhatsApp</p>

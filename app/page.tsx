@@ -73,7 +73,11 @@ export default function Home() {
             </div>
             <div className="space-y-4">
               <div className="flex gap-2">
-                <div className="w-8 h-8 rounded-full bg-gray-800 flex-shrink-0"></div>
+                <img 
+                  src="/cliente.png" 
+                  alt="Cliente" 
+                  className="w-8 h-8 rounded-full flex-shrink-0 object-cover"
+                />
                 <div className="bg-[#1A1A1A] p-3 rounded-2xl rounded-tl-sm text-sm text-gray-300 max-w-[80%]">
                   Oi, vocês têm a camiseta preta no tamanho M?
                 </div>
