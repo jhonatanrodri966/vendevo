@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Toast from "../Toast";
 
 export default function Cadastro() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
@@ -25,13 +27,15 @@ export default function Cadastro() {
       const data = await res.json();
       
       if (res.ok) {
-        alert("Conta criada! Verifique seu e-mail para ativar.");
-        router.push(`/verificar?email=${encodeURIComponent(email)}`);
+        setToast({ message: "Conta criada! Verifique seu e-mail para ativar.", type: "success" });
+        setTimeout(() => {
+          router.push(`/verificar?email=${encodeURIComponent(email)}`);
+        }, 2000);
       } else {
-        alert(data.error || "Erro ao criar conta.");
+        setToast({ message: data.error || "Erro ao criar conta.", type: "error" });
       }
     } catch (error) {
-      alert("Erro ao conectar com o servidor.");
+      setToast({ message: "Erro ao conectar com o servidor.", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -39,10 +43,12 @@ export default function Cadastro() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-6">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-black">V</div>
+            <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="text-xl font-semibold tracking-tight">Vendevo</span>
           </Link>
           <h1 className="text-2xl font-bold">Crie sua conta</h1>
