@@ -8,7 +8,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white flex">
-      <aside className="w-64 border-r border-white/10 bg-[#0F0F0F] flex flex-col fixed h-full z-10">
+      <aside className="w-64 border-r border-white/10 bg-[#0F0F0F] flex flex-col fixed h-full z-20">
         <div className="h-16 flex items-center px-6 border-b border-white/10">
           <Link href="/dashboard" className="flex items-center gap-2">
             <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
@@ -51,8 +51,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      <main className="flex-1 ml-64 p-8">
-        <div key={pathname} className="max-w-5xl mx-auto animate-page-transition">
+      {/* AQUI ESTÁ A MÁGICA DO FUNDO */}
+      <main className="flex-1 ml-64 relative min-h-screen">
+        
+        {/* Grid de fundo sutil */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none z-0"></div>
+        
+        {/* Brilhos (Glows) verdes e azuis no fundo */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+
+        {/* Conteúdo Real */}
+        <div key={pathname} className="relative z-10 p-8 max-w-5xl mx-auto animate-page-transition">
           {children}
         </div>
       </main>
