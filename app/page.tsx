@@ -5,14 +5,13 @@ export default function Home() {
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-emerald-500/30 overflow-hidden relative">
       
       {/* Luzes de Fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[600px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[800px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none"></div>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
 
       {/* Navbar */}
       <nav className="fixed top-0 w-full border-b border-white/5 bg-[#050505]/80 backdrop-blur-md z-50">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* Logo vendevo simplificada para texto */}
             <span className="text-2xl font-bold tracking-tight text-white">Vendevo</span>
           </div>
           
@@ -37,10 +36,10 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <main className="pt-40 pb-20 px-6 relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+      <main className="pt-40 pb-32 px-6 relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
         
         {/* Texto à Esquerda */}
-        <div className="flex-1 text-center md:text-left">
+        <div className="flex-1 text-center lg:text-left z-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-6">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             Vendedor de IA para WhatsApp
@@ -54,11 +53,11 @@ export default function Home() {
             </span>
           </h1>
           
-          <p className="text-lg text-gray-400 mb-8 max-w-lg mx-auto md:mx-0">
+          <p className="text-lg text-gray-400 mb-8 max-w-lg mx-auto lg:mx-0">
             O Vendevo é um vendedor de inteligência artificial que atende seus clientes, tira dúvidas, apresenta seus produtos e fecha vendas — tudo isso, 24 horas por dia.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-10">
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
             <Link href="/cadastro" className="w-full sm:w-auto px-8 py-4 bg-emerald-500 text-black font-semibold rounded-xl hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2">
               Começar agora
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
@@ -69,8 +68,7 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Micro Features */}
-          <div className="flex items-center justify-center md:justify-start gap-6 text-xs text-gray-400">
+          <div className="flex items-center justify-center lg:justify-start gap-6 text-xs text-gray-400">
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
               Ativação rápida
@@ -82,44 +80,85 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Lado Direito (Mockup do Celular) */}
-        <div className="flex-1 relative w-full max-w-sm mx-auto">
-          {/* Fundo do celular */}
-          <div className="relative bg-[#0A0A0A] border-4 border-[#1A1A1A] rounded-[2.5rem] p-2 shadow-2xl overflow-hidden h-[600px]">
-            {/* Header do celular */}
-            <div className="flex items-center justify-between px-4 py-2 text-xs text-gray-400">
-              <span>9:41</span>
-              <div className="flex gap-1">
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-                <div className="w-3 h-3 bg-white rounded-full"></div>
-              </div>
-            </div>
+        {/* Lado Direito (Mockup) */}
+        <div className="flex-1 relative w-full max-w-lg flex justify-center">
+          
+          {/* Brilho verde atrás do celular */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[500px] bg-emerald-500/20 blur-[80px] rounded-full"></div>
+
+          {/* Celular */}
+          <div className="relative w-72 h-[580px] bg-[#0A0A0A] border-[6px] border-[#222] rounded-[3rem] p-2 shadow-[0_0_50px_rgba(16,185,129,0.2)] z-10 hidden md:block">
+            {/* Câmera do celular */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-[#222] rounded-b-xl z-20"></div>
             
-            {/* Chat WhatsApp */}
-            <div className="bg-[#111] h-full rounded-[2rem] p-4 flex flex-col">
-              <div className="flex items-center gap-3 pb-4 border-b border-white/5 mb-4">
-                <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center font-bold text-black">V</div>
+            {/* Tela do celular */}
+            <div className="w-full h-full bg-[#0b141a] rounded-[2.5rem] overflow-hidden flex flex-col relative border border-white/5">
+              
+              {/* Header do WhatsApp */}
+              <div className="bg-[#202c33] px-4 py-8 flex items-center gap-3">
+                <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center font-bold text-black text-sm">V</div>
                 <div>
-                  <p className="text-sm font-semibold">Vendevo</p>
-                  <p className="text-xs text-emerald-400">Online</p>
+                  <p className="text-sm font-semibold text-white">Vendevo</p>
+                  <p className="text-xs text-emerald-400">online</p>
                 </div>
               </div>
 
-              <div className="space-y-4 text-sm flex-1 overflow-y-auto">
-                <div className="bg-[#1A1A1A] text-gray-200 p-3 rounded-2xl rounded-tl-sm max-w-[85%]">
-                  Olá! 👋<br/>Seja bem-vindo(a)!
+              {/* Chat */}
+              <div className="bg-[#0b141a] flex-1 p-3 space-y-3 text-[13px]">
+                <div className="bg-[#202c33] text-gray-200 p-2.5 rounded-lg rounded-tl-none w-max max-w-[85%]">
+                  Olá! 👋<br/>Seja bem-vindo(a)!<br/>Sou o Vendevo, o vendedor de IA da sua loja.
                 </div>
-                <div className="bg-emerald-500/10 border border-emerald-500/20 text-gray-200 p-3 rounded-2xl rounded-tr-sm max-w-[85%] ml-auto">
+                <div className="bg-[#005c4b] text-gray-100 p-2.5 rounded-lg rounded-tr-none w-max max-w-[85%] ml-auto">
                   Queria saber sobre o produto que tem em promoção.
                 </div>
-                <div className="bg-[#1A1A1A] text-gray-200 p-3 rounded-2xl rounded-tl-sm max-w-[85%]">
+                <div className="bg-[#202c33] text-gray-200 p-2.5 rounded-lg rounded-tl-none w-max max-w-[85%]">
                   Ótima escolha! Temos uma promoção especial hoje. Tênis Vortex R$ 159,90.
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Cards Flutuantes (Lado Direito) */}
+          <div className="hidden xl:flex flex-col gap-6 absolute -right-12 top-10 z-20">
+            {/* Card 1 */}
+            <div className="bg-[#0A0A0A] border border-white/10 p-4 rounded-xl w-64 shadow-xl relative">
+              <div className="absolute -left-12 top-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent to-emerald-500/50"></div>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-3">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+              </div>
+              <h3 className="text-white font-semibold text-sm mb-1">Atendimento automático</h3>
+              <p className="text-xs text-gray-400">Responde seus clientes no WhatsApp.</p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-[#0A0A0A] border border-white/10 p-4 rounded-xl w-64 shadow-xl relative">
+              <div className="absolute -left-12 top-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent to-emerald-500/50"></div>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-3">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </div>
+              <h3 className="text-white font-semibold text-sm mb-1">Inteligência Artificial</h3>
+              <p className="text-xs text-gray-400">Entende, orienta e fecha vendas.</p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-[#0A0A0A] border border-white/10 p-4 rounded-xl w-64 shadow-xl relative">
+              <div className="absolute -left-12 top-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent to-emerald-500/50"></div>
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-3">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <h3 className="text-white font-semibold text-sm mb-1">24 horas por dia</h3>
+              <p className="text-xs text-gray-400">Seu negócio sempre atendendo.</p>
+            </div>
+          </div>
+          
+          {/* Texto "Mais conversas" */}
+          <div className="absolute -bottom-10 right-0 text-emerald-500 font-bold italic text-2xl transform rotate-[-10deg] z-20 opacity-80 pointer-events-none hidden lg:block" style={{ fontFamily: "cursive" }}>
+            Mais conversas.<br/>Mais vendas.
+            <svg className="w-12 h-12 absolute -top-6 -right-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 17l6-6 4 4 8-8m0 0v6m0-6h-6" /></svg>
+          </div>
         </div>
       </main>
+
     </div>
   );
 }
