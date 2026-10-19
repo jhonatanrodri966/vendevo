@@ -38,6 +38,7 @@ div, main, section, nav, aside {
 button {
   border-radius: 0.5rem !important;
 }
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -53,10 +54,10 @@ button {
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* Delay para elementos em sequência */
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
+
 @keyframes pageTransition {
   from {
     opacity: 0;
@@ -69,5 +70,5 @@ button {
 }
 
 .animate-page-transition {
-  animation: pageTransition 0.3s ease-out forwards;
+  animation: pageTransition 0.8s ease-out forwards;
 }
