@@ -19,7 +19,7 @@ export default function Home() {
             <a href="#" className="text-white border-b-2 border-emerald-500 pb-1">Início</a>
             <a href="#" className="hover:text-white transition-colors">Funcionalidades</a>
             <a href="#" className="hover:text-white transition-colors">Preços</a>
-            <a href="#como-funciona" className="hover:text-white transition-colors">Como funciona</a>
+            <a href="#" className="hover:text-white transition-colors">Como funciona</a>
             <a href="#" className="hover:text-white transition-colors">Dúvidas</a>
           </div>
 
