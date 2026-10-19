@@ -35,11 +35,13 @@ function VerifyForm() {
     <div className="min-h-screen bg-[#0A0A0A] text-white flex items-center justify-center p-6">
       <div className="w-full max-w-md text-center">
         <Link href="/" className="inline-flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-black">V</div>
+          <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
           <span className="text-xl font-semibold">Vendevo</span>
         </Link>
         <h1 className="text-2xl font-bold mb-2">Verifique seu e-mail</h1>
-        <p className="text-gray-400 mb-8">Enviamos um código de 6 dígitos para <strong>{email}</strong>.</p>
+        <p className="text-gray-400 mb-8">
+          Enviamos um código de 6 dígitos para <strong>{email}</strong>.
+        </p>
 
         <form onSubmit={handleVerify} className="space-y-4">
           <input
@@ -49,7 +51,7 @@ function VerifyForm() {
             maxLength={6}
             required
             placeholder="000000"
-            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-4 text-center text-2xl tracking-[0.5em] text-white focus:outline-none focus:border-emerald-500"
+            className="w-full bg-[#111] border border-white/10 rounded-lg px-4 py-4 text-center text-2xl tracking-[0.5em] text-white focus:outline-none focus:border-emerald-500 transition-colors"
           />
           <button
             type="submit"
