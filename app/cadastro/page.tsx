@@ -27,10 +27,7 @@ export default function Cadastro() {
       const data = await res.json();
       
       if (res.ok) {
-        setToast({ message: "Conta criada! Verifique seu e-mail para ativar.", type: "success" });
-        setTimeout(() => {
-          router.push(`/verificar?email=${encodeURIComponent(email)}`);
-        }, 2000);
+        router.push(`/verificar?email=${encodeURIComponent(email)}`);
       } else {
         setToast({ message: data.error || "Erro ao criar conta.", type: "error" });
       }
