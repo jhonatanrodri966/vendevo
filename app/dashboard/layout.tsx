@@ -7,9 +7,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white flex">
-      <aside className="w-64 border-r border-white/10 bg-[#0F0F0F] flex flex-col fixed h-full z-20">
-        <div className="h-16 flex items-center px-6 border-b border-white/10">
+    <div className="min-h-screen bg-[#0A0A0A] text-white flex relative overflow-hidden">
+      
+      {/* MÁGICA DO FUNDO GERAL (Fica atrás de tudo) */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0"></div>
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+      {/* SIDEBAR COM EFEITO DE VIDRO */}
+      <aside className="w-64 border-r border-white/5 bg-[#0A0A0A]/60 backdrop-blur-xl flex flex-col fixed h-full z-20">
+        <div className="h-16 flex items-center px-6 border-b border-white/5">
           <Link href="/dashboard" className="flex items-center gap-2">
             <img src="/logo.png" alt="Vendevo" className="w-8 h-8 rounded-lg object-cover" />
             <span className="text-lg font-semibold">Vendevo</span>
@@ -43,7 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Link>
         </nav>
 
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/5">
           <Link href="/login" className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
             Sair
@@ -51,18 +58,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* AQUI ESTÁ A MÁGICA DO FUNDO */}
-      <main className="flex-1 ml-64 relative min-h-screen">
-        
-        {/* Grid de fundo sutil */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none z-0"></div>
-        
-        {/* Brilhos (Glows) verdes e azuis no fundo */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
-
-        {/* Conteúdo Real */}
-        <div key={pathname} className="relative z-10 p-8 max-w-5xl mx-auto animate-page-transition">
+      {/* ÁREA DE CONTEÚDO */}
+      <main className="flex-1 ml-64 relative z-10">
+        <div key={pathname} className="p-8 max-w-5xl mx-auto animate-page-transition">
           {children}
         </div>
       </main>
