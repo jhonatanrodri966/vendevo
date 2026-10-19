@@ -343,4 +343,11 @@ export default function Home() {
           <div className="flex gap-6 text-sm text-gray-400">
             <Link href="/suporte" className="hover:text-white">Suporte</Link>
             <Link href="/termos" className="hover:text-white">Termos de uso</Link>
-            <Link href="/privac
+            <Link href="/privacidade" className="hover:text-white">Privacidade</Link>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
