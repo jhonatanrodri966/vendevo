@@ -26,7 +26,7 @@ export async function POST() {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"], // SÓ CARTÃO POR ENQUANTO
+      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
@@ -34,7 +34,7 @@ export async function POST() {
             product_data: {
               name: "Assinatura Vendevo",
             },
-            unit_amount: 100, // R$ 1,00 para teste
+            unit_amount: 3990, // R$ 39,90 (valor real)
           },
           quantity: 1,
         },
