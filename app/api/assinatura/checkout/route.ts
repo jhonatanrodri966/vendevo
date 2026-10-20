@@ -35,7 +35,7 @@ export async function POST() {
             product_data: {
               name: "Assinatura Vendevo",
             },
-            unit_amount: 3990, // R$ 39,90
+            unit_amount: 100, // R$ 1,00 para teste
           },
           quantity: 1,
         },
