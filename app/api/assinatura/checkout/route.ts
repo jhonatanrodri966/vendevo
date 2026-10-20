@@ -25,7 +25,6 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // Cria a assinatura no Mercado Pago (preapproval)
     const response = await fetch("https://api.mercadopago.com/preapproval", {
       method: "POST",
       headers: {
@@ -49,11 +48,10 @@ export async function POST() {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Mercado Pago error:", data);
-      return NextResponse.json({ error: "Erro ao criar assinatura no Mercado Pago." }, { status: 500 });
+      // AQUI: Agora ele vai retornar o erro EXATO do Mercado Pago pra tela
+      return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
     }
 
-    // Salva o ID da assinatura no banco (opcional, mas recomendado)
     await prisma.subscription.upsert({
       where: { userId },
       create: {
@@ -68,8 +66,8 @@ export async function POST() {
     });
 
     return NextResponse.json({ url: data.init_point });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Erro interno." }, { status: 500 });
+  } catch (error: any) {
+    // AQUI: Retorna erro do servidor pra tela
+    return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
   }
 }
