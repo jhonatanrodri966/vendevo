@@ -25,47 +25,56 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // 1. Cria um plano de assinatura (sem payer_email)
-    const planResponse = await fetch("https://api.mercadopago.com/preapproval_plan", {
+    // Cria uma PREFERÊNCIA DE PAGAMENTO (Checkout Pro) avulsa, sem plano
+    const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        reason: "Plano Vendevo",
-        auto_recurring: {
-          frequency: 1,
-          frequency_type: "months",
-          transaction_amount: 39.90,
-          currency_id: "BRL",
+        items: [
+          {
+            title: "Assinatura Vendevo - Teste",
+            quantity: 1,
+            currency_id: "BRL",
+            unit_price: 1.00,
+          },
+        ],
+        payer: {
+          email: user.email,
         },
-        back_url: "https://vendevo.vercel.app/dashboard/assinatura",
+        back_urls: {
+          success: "https://vendevo.vercel.app/dashboard/assinatura",
+          failure: "https://vendevo.vercel.app/dashboard/assinatura",
+          pending: "https://vendevo.vercel.app/dashboard/assinatura",
+        },
+        auto_return: "approved",
       }),
     });
 
-    const planData = await planResponse.json();
+    const data = await response.json();
 
-    if (!planResponse.ok) {
-      return NextResponse.json({ error: `Erro MP Plano: ${JSON.stringify(planData)}` }, { status: 500 });
+    if (!response.ok) {
+      return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
     }
 
-    // 2. Salva o ID do plano no banco
+    // Salva o ID da preferência no banco
     await prisma.subscription.upsert({
       where: { userId },
       create: {
         userId,
         status: "PENDING",
-        pagarmeSubscriptionId: planData.id,
+        pagarmeSubscriptionId: data.id,
       },
       update: {
         status: "PENDING",
-        pagarmeSubscriptionId: planData.id,
+        pagarmeSubscriptionId: data.id,
       },
     });
 
-    // 3. Retorna o link do checkout para o cliente
-    return NextResponse.json({ url: planData.init_point });
+    // Retorna o link do checkout avulso
+    return NextResponse.json({ url: data.init_point });
   } catch (error: any) {
     return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
   }
