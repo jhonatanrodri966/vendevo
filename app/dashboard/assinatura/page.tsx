@@ -27,7 +27,6 @@ export default function Assinatura() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        // AQUI: Mostra o erro real do servidor
         alert(`Erro do servidor: ${JSON.stringify(data)}`);
         setLoading(false);
       }
@@ -65,7 +64,7 @@ export default function Assinatura() {
           <div className="space-y-4">
             <div className="flex justify-between text-sm border-t border-white/10 pt-4">
               <span className="text-gray-400">Valor mensal</span>
-              <span className="font-medium">R$ 39,90</span>
+              <span className="font-medium">R$ 1,00</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Próxima cobrança</span>
@@ -82,7 +81,7 @@ export default function Assinatura() {
               onClick={handleSubscribe}
               className="w-full bg-emerald-500 text-black font-semibold py-3 rounded-lg hover:bg-emerald-400 transition"
             >
-              Assinar por R$ 39,90/mês
+              Assinar por R$ 1,00/mês
             </button>
           </div>
         )}
