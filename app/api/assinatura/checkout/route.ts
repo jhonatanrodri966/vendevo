@@ -9,10 +9,8 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "vendevo_secret_super_seguro_123");
 
-// Chave quebrada em duas partes para o GitHub não bloquear
-const PART1 = "sk_test_51USgig2MKrrw7TxbpdZN054XVBnIxnqs";
-const PART2 = "GkioXJ5JhCReVbtN84l2lZRCFqZJmUqp47KIFBOBgHnsjZIrpqrLn2Ml00xnKFb53B";
-const stripe = new Stripe(PART1 + PART2, {
+// Usa a chave da Vercel (produção ou teste, dependendo do que estiver lá)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2025-01-27.acacia" as any,
 });
 
