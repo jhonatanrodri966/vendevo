@@ -9,7 +9,6 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "vendevo_secret_super_seguro_123");
 
-// Usa a chave da Vercel (produção ou teste, dependendo do que estiver lá)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2025-01-27.acacia" as any,
 });
@@ -27,7 +26,7 @@ export async function POST() {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "pix"], // PIX HABILITADO
+      payment_method_types: ["card"], // SÓ CARTÃO POR ENQUANTO
       line_items: [
         {
           price_data: {
