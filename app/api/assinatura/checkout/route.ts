@@ -25,14 +25,15 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    const response = await fetch("https://api.mercadopago.com/preapproval", {
+    // 1. Cria um plano de assinatura (sem payer_email)
+    const planResponse = await fetch("https://api.mercadopago.com/preapproval_plan", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        reason: "Assinatura Vendevo",
+        reason: "Plano Vendevo",
         auto_recurring: {
           frequency: 1,
           frequency_type: "months",
@@ -40,31 +41,31 @@ export async function POST() {
           currency_id: "BRL",
         },
         back_url: "https://vendevo.vercel.app/dashboard/assinatura",
-        payer_email: "test_user_3539957782674893550@testuser.com", // <--- BUYER TESTE 2
-        status: "pending",
       }),
     });
 
-    const data = await response.json();
+    const planData = await planResponse.json();
 
-    if (!response.ok) {
-      return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
+    if (!planResponse.ok) {
+      return NextResponse.json({ error: `Erro MP Plano: ${JSON.stringify(planData)}` }, { status: 500 });
     }
 
+    // 2. Salva o ID do plano no banco
     await prisma.subscription.upsert({
       where: { userId },
       create: {
         userId,
         status: "PENDING",
-        pagarmeSubscriptionId: data.id,
+        pagarmeSubscriptionId: planData.id,
       },
       update: {
         status: "PENDING",
-        pagarmeSubscriptionId: data.id,
+        pagarmeSubscriptionId: planData.id,
       },
     });
 
-    return NextResponse.json({ url: data.init_point });
+    // 3. Retorna o link do checkout para o cliente
+    return NextResponse.json({ url: planData.init_point });
   } catch (error: any) {
     return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
   }
