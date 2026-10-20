@@ -25,6 +25,7 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
+    // ESTRUTURA CORRETA PARA PREAPPROVAL NO AMBIENTE DE TESTE
     const response = await fetch("https://api.mercadopago.com/preapproval", {
       method: "POST",
       headers: {
@@ -48,7 +49,6 @@ export async function POST() {
     const data = await response.json();
 
     if (!response.ok) {
-      // AQUI: Agora ele vai retornar o erro EXATO do Mercado Pago pra tela
       return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
     }
 
@@ -67,7 +67,6 @@ export async function POST() {
 
     return NextResponse.json({ url: data.init_point });
   } catch (error: any) {
-    // AQUI: Retorna erro do servidor pra tela
     return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
   }
 }
