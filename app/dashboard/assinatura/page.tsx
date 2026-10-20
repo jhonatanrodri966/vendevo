@@ -1,13 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
-export default function Assinatura() {
+function AssinaturaContent() {
   const [loading, setLoading] = useState(true);
   const [subscription, setSubscription] = useState<any>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const success = searchParams.get("success");
 
+  // Se voltou do Stripe com sucesso, avisa o servidor pra ativar a assinatura
   useEffect(() => {
-    async function fetchSubscription() {
+    async function checkSuccess() {
+      if (success === "true") {
+        await fetch("/api/assinatura/confirmar", { method: "POST" });
+        router.replace("/dashboard/assinatura"); // Limpa a URL
+      }
+      
       const res = await fetch("/api/assinatura");
       if (res.ok) {
         const data = await res.json();
@@ -15,8 +25,8 @@ export default function Assinatura() {
       }
       setLoading(false);
     }
-    fetchSubscription();
-  }, []);
+    checkSuccess();
+  }, [success, router]);
 
   async function handleSubscribe() {
     setLoading(true);
@@ -68,7 +78,9 @@ export default function Assinatura() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Próxima cobrança</span>
-              <span className="font-medium">{new Date(subscription.currentPeriodEnd).toLocaleDateString("pt-BR")}</span>
+              <span className="font-medium">
+                {subscription.currentPeriodEnd ? new Date(subscription.currentPeriodEnd).toLocaleDateString("pt-BR") : "Em 30 dias"}
+              </span>
             </div>
             <button className="w-full mt-4 bg-white/5 text-gray-300 font-medium py-3 rounded-lg hover:bg-white/10 transition">
               Gerenciar assinatura
@@ -89,9 +101,17 @@ export default function Assinatura() {
 
       <div className="bg-[#111111] border border-white/10 p-8 rounded-2xl text-center">
         <p className="text-sm text-gray-500">
-          Pagamento processado com segurança pelo Pagar.me.
+          Pagamento processado com segurança pelo Stripe.
         </p>
       </div>
     </div>
+  );
+}
+
+export default function Assinatura() {
+  return (
+    <Suspense fallback={<div className="text-white p-8">Carregando...</div>}>
+      <AssinaturaContent />
+    </Suspense>
   );
 }
