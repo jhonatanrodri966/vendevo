@@ -20,13 +20,19 @@ export default function Assinatura() {
 
   async function handleSubscribe() {
     setLoading(true);
-    const res = await fetch("/api/assinatura/checkout", { method: "POST" });
-    const data = await res.json();
-    
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Erro ao gerar link de pagamento. Verifique as configurações do Pagar.me.");
+    try {
+      const res = await fetch("/api/assinatura/checkout", { method: "POST" });
+      const data = await res.json();
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        // AQUI: Mostra o erro real do servidor
+        alert(`Erro do servidor: ${JSON.stringify(data)}`);
+        setLoading(false);
+      }
+    } catch (error: any) {
+      alert(`Erro na requisição: ${error.message}`);
       setLoading(false);
     }
   }
