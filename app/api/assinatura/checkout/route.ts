@@ -25,23 +25,31 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    const response = await fetch("https://api.mercadopago.com/preapproval", {
+    // Criando uma PREFERÊNCIA de pagamento (Checkout Pro)
+    const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        reason: "Assinatura Vendevo",
-        auto_recurring: {
-          frequency: 1,
-          frequency_type: "months",
-          transaction_amount: 39.90,
-          currency_id: "BRL",
+        items: [
+          {
+            title: "Assinatura Vendevo",
+            quantity: 1,
+            currency_id: "BRL",
+            unit_price: 39.90,
+          },
+        ],
+        payer: {
+          email: "test_user_7977434959361391795@testuser.com",
         },
-        back_url: "https://vendevo.vercel.app/dashboard/assinatura",
-        payer_email: "test_user_7977434959361391795@testuser.com", // <--- COMPRADOR CORRETO
-        status: "pending",
+        back_urls: {
+          success: "https://vendevo.vercel.app/dashboard/assinatura",
+          failure: "https://vendevo.vercel.app/dashboard/assinatura",
+          pending: "https://vendevo.vercel.app/dashboard/assinatura",
+        },
+        auto_return: "approved",
       }),
     });
 
@@ -51,6 +59,7 @@ export async function POST() {
       return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
     }
 
+    // Salva o ID da preferência no banco
     await prisma.subscription.upsert({
       where: { userId },
       create: {
@@ -64,6 +73,7 @@ export async function POST() {
       },
     });
 
+    // Retorna o link do checkout
     return NextResponse.json({ url: data.init_point });
   } catch (error: any) {
     return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
