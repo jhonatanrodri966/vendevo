@@ -40,7 +40,7 @@ export async function POST() {
           currency_id: "BRL",
         },
         back_url: "https://vendevo.vercel.app/dashboard/assinatura",
-        payer_email: "test_user_7507782866522542137@testuser.com", // <--- ALTERADO AQUI
+        payer_email: "test_user_7977434959361391795@testuser.com", // <--- COMPRADOR CORRETO
         status: "pending",
       }),
     });
