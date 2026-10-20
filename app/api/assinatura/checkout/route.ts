@@ -25,7 +25,6 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // ESTRUTURA CORRETA PARA PREAPPROVAL NO AMBIENTE DE TESTE
     const response = await fetch("https://api.mercadopago.com/preapproval", {
       method: "POST",
       headers: {
@@ -41,7 +40,7 @@ export async function POST() {
           currency_id: "BRL",
         },
         back_url: "https://vendevo.vercel.app/dashboard/assinatura",
-        payer_email: user.email,
+        payer_email: "test_user_7977434959361391795@testuser.com", // <--- ALTERADO AQUI
         status: "pending",
       }),
     });
