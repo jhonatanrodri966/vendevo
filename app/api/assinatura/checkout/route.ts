@@ -25,7 +25,7 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // FORÇA O PIX COMO MEIO DE PAGAMENTO
+    // FORÇA O PIX E IGNORA CARTÕES
     const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
@@ -47,7 +47,8 @@ export async function POST() {
         payment_methods: {
           excluded_payment_types: [
             { id: "credit_card" },
-            { id: "debit_card" }
+            { id: "debit_card" },
+            { id: "ticket" } // ignora boleto também
           ]
         },
         back_urls: {
