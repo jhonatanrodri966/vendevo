@@ -25,7 +25,7 @@ export async function POST() {
       return NextResponse.json({ error: "Pagamentos não configurados." }, { status: 500 });
     }
 
-    // Cria uma PREFERÊNCIA DE PAGAMENTO (Checkout Pro) avulsa, sem plano
+    // FORÇA O PIX COMO MEIO DE PAGAMENTO
     const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
       method: "POST",
       headers: {
@@ -44,6 +44,12 @@ export async function POST() {
         payer: {
           email: user.email,
         },
+        payment_methods: {
+          excluded_payment_types: [
+            { id: "credit_card" },
+            { id: "debit_card" }
+          ]
+        },
         back_urls: {
           success: "https://vendevo.vercel.app/dashboard/assinatura",
           failure: "https://vendevo.vercel.app/dashboard/assinatura",
@@ -59,7 +65,6 @@ export async function POST() {
       return NextResponse.json({ error: `Erro MP: ${JSON.stringify(data)}` }, { status: 500 });
     }
 
-    // Salva o ID da preferência no banco
     await prisma.subscription.upsert({
       where: { userId },
       create: {
@@ -73,7 +78,6 @@ export async function POST() {
       },
     });
 
-    // Retorna o link do checkout avulso
     return NextResponse.json({ url: data.init_point });
   } catch (error: any) {
     return NextResponse.json({ error: `Erro interno: ${error.message}` }, { status: 500 });
