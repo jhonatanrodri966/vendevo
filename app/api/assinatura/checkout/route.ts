@@ -41,6 +41,9 @@ export async function POST() {
       ],
       mode: "payment",
       customer_email: user.email,
+      branding_settings: {
+        display_name: "Vendevo",
+      },
       success_url: "https://vendevo.vercel.app/dashboard/assinatura?success=true",
       cancel_url: "https://vendevo.vercel.app/dashboard/assinatura?canceled=true",
     });
