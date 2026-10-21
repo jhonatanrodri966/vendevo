@@ -1,24 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Login() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [blocked, setBlocked] = useState(false);
+  const [blocked, setBlocked] = useState(() => {
+    if (typeof window !== "undefined") {
+      return document.cookie.includes("vendevo_login_blocked=");
+    }
+    return false;
+  });
   const [errorMsg, setErrorMsg] = useState("");
 
-  useEffect(() => {
-    const hasBlockCookie = document.cookie.includes("vendevo_login_blocked=");
-    if (hasBlockCookie) setBlocked(true);
-  }, []);
-
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault(); // Isso impede a página de recarregar
+    e.preventDefault();
     if (blocked || loading) return;
 
     setLoading(true);
@@ -33,14 +31,12 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        // Se o login deu certo, manda pro dashboard
         window.location.href = "/dashboard";
       } else {
-        // Se deu erro, mostra a mensagem na tela
         if (res.status === 429) setBlocked(true);
         setErrorMsg(data.error || "E-mail ou senha incorretos.");
       }
-    } catch (error) {
+    } catch {
       setErrorMsg("Erro ao conectar com o servidor.");
     } finally {
       setLoading(false);

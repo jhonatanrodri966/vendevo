@@ -2,10 +2,19 @@
 
 import { useState, useEffect } from "react";
 
+type Produto = {
+  id: string;
+  name: string;
+  description: string | null;
+  priceCents: number;
+  stock: number | null;
+  imageUrl: string | null;
+};
+
 export default function Produtos() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [produtos, setProdutos] = useState<any[]>([]);
+  const [editingProduct, setEditingProduct] = useState<Produto | null>(null);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
   const [search, setSearch] = useState("");
   const [formData, setFormData] = useState({ name: "", description: "", price: "", stock: "", imageUrl: "" });
 
@@ -16,7 +25,14 @@ export default function Produtos() {
   }
 
   useEffect(() => {
-    carregarProdutos();
+    let mounted = true;
+    async function load() {
+      const res = await fetch("/api/produtos");
+      const data = await res.json();
+      if (mounted) setProdutos(data);
+    }
+    load();
+    return () => { mounted = false; };
   }, []);
 
   function openCreateModal() {
@@ -25,7 +41,7 @@ export default function Produtos() {
     setIsModalOpen(true);
   }
 
-  function openEditModal(prod: any) {
+  function openEditModal(prod: Produto) {
     setEditingProduct(prod);
     setFormData({
       name: prod.name,

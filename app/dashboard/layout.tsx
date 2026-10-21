@@ -7,17 +7,18 @@ import { useEffect, useState } from "react";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window !== "undefined") {
+      return document.cookie.includes("vendevo_session=");
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Verifica se existe o cookie de sessão
-    const hasSession = document.cookie.includes("vendevo_session=");
-    if (!hasSession) {
+    if (!isAuthenticated) {
       router.push("/login");
-    } else {
-      setIsAuthenticated(true);
     }
-  }, [router]);
+  }, [isAuthenticated, router]);
 
   if (!isAuthenticated) {
     return <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-white">Verificando sessão...</div>;

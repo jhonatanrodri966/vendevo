@@ -21,7 +21,6 @@ async function getUserId() {
   }
 }
 
-// Busca os dados atuais para preencher a tela
 export async function GET() {
   const userId = await getUserId();
   if (!userId) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
@@ -32,28 +31,26 @@ export async function GET() {
   return NextResponse.json({ name: user.name, email: user.email });
 }
 
-// Salva os dados novos
 export async function PUT(req: NextRequest) {
   const userId = await getUserId();
   if (!userId) return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
 
   const { name, email, password } = await req.json();
 
-  // Se o usuário digitou uma senha nova, a gente criptografa ela
-  let dataToUpdate: any = { name, email };
+  // Objeto de atualização tipado corretamente
+  const dataToUpdate: { name: string; email: string; passwordHash?: string } = { name, email };
   if (password && password.trim() !== "") {
     const passwordHash = await bcrypt.hash(password, 10);
     dataToUpdate.passwordHash = passwordHash;
   }
 
   try {
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
       data: dataToUpdate,
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
-    // Se o e-mail já existir em outra conta, dá erro
+  } catch {
     return NextResponse.json({ error: "Este e-mail já está em uso." }, { status: 400 });
   }
 }
