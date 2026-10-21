@@ -150,3 +150,14 @@ model PendingUser {
   attempts     Int      @default(0)
   createdAt    DateTime @default(now())
 }
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+  @@map("login_attempts")
+}
