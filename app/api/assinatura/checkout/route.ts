@@ -26,7 +26,7 @@ export async function POST() {
     if (!user) return NextResponse.json({ error: "Usuário não encontrado" }, { status: 404 });
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      // O Stripe já assume cartão por padrão no modo payment
       line_items: [
         {
           price_data: {
