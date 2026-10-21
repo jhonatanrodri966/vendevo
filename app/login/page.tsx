@@ -2,25 +2,26 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [blocked, setBlocked] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    // Verifica se o cookie de bloqueio existe
     const hasBlockCookie = document.cookie.includes("vendevo_login_blocked=");
-    if (hasBlockCookie) {
-      setBlocked(true);
-    }
+    if (hasBlockCookie) setBlocked(true);
   }, []);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (blocked) return;
+    if (blocked || loading) return;
     setLoading(true);
+    setErrorMsg("");
 
     try {
       const res = await fetch("/api/login", {
@@ -31,15 +32,13 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        window.location.href = "/dashboard";
+        router.push("/dashboard");
       } else {
-        if (res.status === 429) {
-          setBlocked(true);
-        }
-        alert(data.error);
+        if (res.status === 429) setBlocked(true);
+        setErrorMsg(data.error || "Erro ao fazer login.");
       }
     } catch (error) {
-      alert("Erro ao conectar com o servidor.");
+      setErrorMsg("Erro ao conectar com o servidor.");
     } finally {
       setLoading(false);
     }
@@ -90,6 +89,7 @@ export default function Login() {
             {blocked ? "Bloqueado por segurança" : loading ? "Entrando..." : "Entrar"}
           </button>
 
+          {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
           {blocked && (
             <p className="text-red-400 text-sm text-center mt-2">
               Muitas tentativas. Aguarde 15 minutos para tentar novamente.
