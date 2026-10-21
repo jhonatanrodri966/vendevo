@@ -18,8 +18,9 @@ export default function Login() {
   }, []);
 
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault(); // Isso impede a página de recarregar
     if (blocked || loading) return;
+
     setLoading(true);
     setErrorMsg("");
 
@@ -32,10 +33,12 @@ export default function Login() {
       const data = await res.json();
 
       if (res.ok) {
-        router.push("/dashboard");
+        // Se o login deu certo, manda pro dashboard
+        window.location.href = "/dashboard";
       } else {
+        // Se deu erro, mostra a mensagem na tela
         if (res.status === 429) setBlocked(true);
-        setErrorMsg(data.error || "Erro ao fazer login.");
+        setErrorMsg(data.error || "E-mail ou senha incorretos.");
       }
     } catch (error) {
       setErrorMsg("Erro ao conectar com o servidor.");
@@ -64,8 +67,8 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={blocked}
-              className={`w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors ${blocked ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={blocked || loading}
+              className={`w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors ${blocked || loading ? "opacity-50 cursor-not-allowed" : ""}`}
               placeholder="seu@email.com"
             />
           </div>
@@ -76,8 +79,8 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              disabled={blocked}
-              className={`w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors ${blocked ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={blocked || loading}
+              className={`w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-emerald-500 transition-colors ${blocked || loading ? "opacity-50 cursor-not-allowed" : ""}`}
               placeholder="••••••••"
             />
           </div>
@@ -89,7 +92,12 @@ export default function Login() {
             {blocked ? "Bloqueado por segurança" : loading ? "Entrando..." : "Entrar"}
           </button>
 
-          {errorMsg && <p className="text-red-400 text-sm text-center">{errorMsg}</p>}
+          {errorMsg && (
+            <p className="text-red-400 text-sm text-center bg-red-500/10 border border-red-500/20 rounded-lg p-2 mt-2">
+              {errorMsg}
+            </p>
+          )}
+
           {blocked && (
             <p className="text-red-400 text-sm text-center mt-2">
               Muitas tentativas. Aguarde 15 minutos para tentar novamente.
