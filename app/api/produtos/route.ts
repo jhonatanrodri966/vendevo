@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Nome e preço são obrigatórios." }, { status: 400 });
     }
 
-    await prisma.product.create({
+    const product = await prisma.product.create({
       data: {
         userId,
         name,
@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    // RETORNA O PRODUTO CRIADO (com id)
+    return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Erro interno." }, { status: 500 });
