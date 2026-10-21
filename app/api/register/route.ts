@@ -8,12 +8,32 @@ import { sendVerificationEmail } from "@/app/lib/email/send-verification";
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+const MAX_REGISTERS_PER_IP = 3;
+const WINDOW_MINUTES = 10;
+
 export async function POST(req: NextRequest) {
   try {
     const { name, email, password } = await req.json();
+    const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown";
 
     if (!name || !email || !password) {
       return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
+    }
+
+    // Rate limiting por IP
+    const windowStart = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
+    const recentRegisters = await prisma.pendingUser.count({
+      where: {
+        // Como o PendingUser não tem IP, a gente usa o createdAt como proxy
+        createdAt: { gte: windowStart },
+      },
+    });
+
+    if (recentRegisters >= MAX_REGISTERS_PER_IP) {
+      return NextResponse.json(
+        { error: "Muitas tentativas de cadastro. Tente novamente em 10 minutos." },
+        { status: 429 }
+      );
     }
 
     const userExists = await prisma.user.findUnique({ where: { email } });
@@ -27,7 +47,6 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    // Código de 6 dígitos numéricos
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeHash = createHash("sha256").update(code).digest("hex");
 
