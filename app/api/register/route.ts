@@ -20,21 +20,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
     }
 
-    // Rate limiting por IP
     const windowStart = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
-    const recentRegisters = await prisma.pendingUser.count({
+    const recentAttempts = await prisma.registerAttempt.count({
       where: {
-        // Como o PendingUser não tem IP, a gente usa o createdAt como proxy
+        ip,
         createdAt: { gte: windowStart },
       },
     });
 
-    if (recentRegisters >= MAX_REGISTERS_PER_IP) {
+    if (recentAttempts >= MAX_REGISTERS_PER_IP) {
       return NextResponse.json(
         { error: "Muitas tentativas de cadastro. Tente novamente em 10 minutos." },
         { status: 429 }
       );
     }
+
+    await prisma.registerAttempt.create({ data: { ip } });
 
     const userExists = await prisma.user.findUnique({ where: { email } });
     if (userExists) {
