@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
-import { randomBytes, createHash } from "crypto";
+import { createHash } from "crypto";
 import { sendVerificationEmail } from "@/app/lib/email/send-verification";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const code = randomBytes(3).toString("hex").toUpperCase();
+    // Código de 6 dígitos numéricos
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeHash = createHash("sha256").update(code).digest("hex");
 
     await prisma.pendingUser.create({
