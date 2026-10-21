@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [blocked, setBlocked] = useState(false);
+
+  useEffect(() => {
+    // Verifica se o cookie de bloqueio existe
+    const hasBlockCookie = document.cookie.includes("vendevo_login_blocked=");
+    if (hasBlockCookie) {
+      setBlocked(true);
+    }
+  }, []);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();

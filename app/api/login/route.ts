@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 import { SignJWT } from "jose";
+import { cookies } from "next/headers";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -20,20 +21,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Preencha todos os campos." }, { status: 400 });
     }
 
-    // Verifica tentativas recentes
     const windowStart = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
     const attempts = await prisma.loginAttempt.count({
-      where: {
-        email,
-        createdAt: { gte: windowStart },
-      },
+      where: { email, createdAt: { gte: windowStart } },
     });
 
     if (attempts >= MAX_ATTEMPTS) {
-      return NextResponse.json(
+      const response = NextResponse.json(
         { error: "Muitas tentativas. Tente novamente em 15 minutos." },
         { status: 429 }
       );
+      response.cookies.set("vendevo_login_blocked", "true", {
+        httpOnly: true,
+        maxAge: 60 * 15, // 15 minutos
+        path: "/",
+      });
+      return response;
     }
 
     const user = await prisma.user.findUnique({ where: { email } });
@@ -52,7 +55,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Por favor, verifique seu e-mail antes de entrar." }, { status: 403 });
     }
 
-    // Limpa as tentativas antigas após login bem-sucedido
     await prisma.loginAttempt.deleteMany({ where: { email } });
 
     const token = await new SignJWT({ userId: user.id })
@@ -68,7 +70,8 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
-
+    // Remove o cookie de bloqueio se o login der certo
+    response.cookies.delete("vendevo_login_blocked");
     return response;
   } catch (error) {
     console.error(error);
